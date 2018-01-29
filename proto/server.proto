@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package api;
+
+option go_package = "github.com/axsh/vpnhub/api";
+
+import "model.proto";
+
+// import "github.com/golang/protobuf/ptypes/timestamp/timestamp.proto";
+
+service VpnService {
+  rpc Create(CreateVpnRequest) returns(CreateVpnReply){}
+  rpc Destroy(DestroyVpnRequest) returns(DestroyVpnReply){}
+}
+
+message CreateVpnRequest {
+  model.VpnServer vpn_server = 1;
+}
+
+message DestroyVpnRequest {
+  string vpn_name = 1;
+}
+
+message CreateVpnReply {
+  string vpn_name = 1;
+}
+
+message DestroyVpnReply {
+  string vpn_name = 1;
+}
+
+service NicService {
+  rpc Register(RegisterNicRequest) returns(RegisterNicReply){}
+  rpc Deregister(DeregisterNicRequest) returns(DeregisterNicReply){}
+}
+
+message RegisterNicRequest {
+  model.Interface interface = 1;
+}
+
+message DeregisterNicRequest {
+  model.Interface interface = 1;
+}
+
+message RegisterNicReply {
+  string interface_id = 1;
+}
+
+message DeregisterNicReply {
+  string interface_id = 1;
+}
