@@ -40,7 +40,7 @@ func (c *VpnHub) Connect() error {
 	return nil
 }
 
-func newVpnHubClient() *VpnHub {
+func newVpnHub() *VpnHub {
 	hubServerIp = "localhost"
 	hubServerPort = "9000"
 
@@ -57,6 +57,6 @@ func main() {
 	defer hub.conn.Close()
 
 	// test code
-	c := api.NewVpnServiceClient(client.conn)
-	c.Create(client.ctx, &api.CreateVpnRequest{})
+	c := api.NewVpnServiceClient(hub.conn)
+	c.Create(hub.ctx, &api.CreateVpnRequest{})
 }

@@ -1,13 +1,19 @@
 NAME="vpnhub"
 OWNER="Axsh.co"
 
+build: deps client server
+
 test:
 	go test -v
 
 gen:
 	go generate -v ./api/ ./model/
 
-build:
-	govendor sync
+client: deps
 	go build  -v -o ./hubclient ./bin/hubclient/main.go
+
+server: deps
 	go build  -v -o ./hubserver ./bin/hubserver/main.go
+
+deps:
+	govendor sync
