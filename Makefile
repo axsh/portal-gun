@@ -1,7 +1,7 @@
 NAME="vpnhub"
 OWNER="Axsh.co"
 
-build: deps client server
+build: gen deps client server
 
 test:
 	go test -v
