@@ -28,8 +28,22 @@ message SoftEtherParam {
   string tap_id = 5;
 }
 
+message NetworkDriver {
+  enum Driver {
+    NONE = 0;
+    OPENVNET = 1;
+  }
+}
+
+message  Nic {
+  NetworkDriver driver = 1;
+  oneof InterfaceParams {
+    OpenVNetInterface openvnet_interface = 100;
+  }
+}
+
 // network manage message
-message Interface {
+message OpenVNetInterface {
   string interface_id = 1;
   string network_id = 2;
 

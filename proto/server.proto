@@ -35,11 +35,11 @@ service NicService {
 }
 
 message RegisterNicRequest {
-  model.Interface interface = 1;
+  model.Nic nic = 1;
 }
 
 message DeregisterNicRequest {
-  model.Interface interface = 1;
+  model.Nic nic = 1;
 }
 
 message RegisterNicReply {

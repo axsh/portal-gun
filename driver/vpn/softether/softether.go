@@ -5,9 +5,9 @@ import (
 	"github.com/axsh/vpnhub"
 )
 
-type SoftEtherDriver
+type SoftEtherDriver struct {}
 
-func (d *SoftEtherDriver) LoadConfig(p model.VpnParams) error {
+func (d *SoftEtherDriver) GenerateConfig(p *model.VpnParams) error {
 	params := p.(model.SoftEtherParams)
 	fmt.Println(p)
 }

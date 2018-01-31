@@ -1,11 +1,15 @@
 package network
 
 import (
+	"golang.org/x/net/context"
 	"github.com/axsh/vpnhub/model"
 )
 
 type NetworkDriver interface {
-	RegisterInterface(i *model.Interface) (string, error)
-	DeregisterInterface(id string) (string, error)
-	GetInterface(id string) (*model.Interface, error)
+	RegisterNic(i *model.Nic) (string, error)
+	DeregisterNic(i *model.Nic) (string, error)
+}
+
+func NewNetworkDriver(ctx context.Context) (NetworkDriver, error) {
+	return nil, nil
 }

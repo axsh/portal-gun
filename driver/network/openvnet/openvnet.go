@@ -5,18 +5,24 @@ import (
 	"github.com/axsh/vpnhub/model"
 )
 
-type OpenVNetDriver {}
+type OpenVNetDriver {
 
-func RegisterInterface(i *model.Interface) (string, error) {
+}
+
+func(d *OpenVNetDriver) RegisterNic(i *model.Nic) (string, error) {
 	return "", nil
 }
 
-func DeregisterInterface(id string) error {
+func(d *OpenVNetDriver) DeregisterNic(id string) error {
 	return nil
 }
 
-func GetInterface(id string) (*model.Interface, error) {
-	i := &model.Interface{}
+func(d *OpenVNetDriver) GetNic(id string) (*model.Nic, error) {
+	i := &model.Nic{}
 
 	return i, error
+}
+
+func(d *OpenVNetDriver) GetDriver() {
+
 }

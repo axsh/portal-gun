@@ -20,7 +20,7 @@ func NewVpnHubAPIServer() *VpnHubAPIServer {
 	}
 
 	RegisterVpnServiceServer(s.server, &VpnService{api: s})
-	RegisterNicServiceServer(s.server, &NicService{api:s})
+	RegisterNicServiceServer(s.server, &NicService{api: s})
 	return s
 }
 
