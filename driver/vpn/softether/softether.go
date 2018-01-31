@@ -2,13 +2,13 @@ package softether
 
 import (
 	"fmt"
-	"github.com/axsh/vpnhub"
+	"github.com/axsh/vpnhub/driver"
 )
 
 type SoftEtherDriver struct {}
 
-func (d *SoftEtherDriver) GenerateConfig(p *model.VpnParams) error {
-	params := p.(model.SoftEtherParams)
+func (d *SoftEtherDriver) GenerateConfig(p *driver.VpnParams) error {
+	params := p.(driver.SoftEtherParams)
 	fmt.Println(p)
 }
 

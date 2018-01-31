@@ -7,7 +7,7 @@ test:
 	go test -v
 
 gen:
-	go generate -v ./api/ ./model/
+	go generate -v ./api/ ./driver/
 
 client: deps
 	go build  -v -o ./hubclient ./bin/hubclient/main.go

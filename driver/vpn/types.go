@@ -2,11 +2,11 @@ package vpn
 
 import (
 	"golang.org/x/net/context"
-	"github.com/axsh/vpnhub/model"
+	"github.com/axsh/vpnhub/driver"
 )
 
 type VpnDriver interface {
-	GenerateConfig(p *model.VpnServer) error
+	GenerateConfig(p *driver.VpnServer) error
 	StartVpn() error
 	StopVpn() error
 	RemoveVpn() error
