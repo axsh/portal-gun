@@ -4,7 +4,7 @@ package api;
 
 option go_package = "github.com/axsh/vpnhub/api";
 
-import "driver.proto";
+import "model.proto";
 
 // import "github.com/golang/protobuf/ptypes/timestamp/timestamp.proto";
 
@@ -14,11 +14,11 @@ service VpnService {
 }
 
 message CreateVpnRequest {
-  driver.VpnServer vpn_server = 1;
+  model.VpnServer vpn_server = 1;
 }
 
 message DestroyVpnRequest {
-  string vpn_name = 1;
+  model.VpnServer vpn_server = 1;
 }
 
 message CreateVpnReply {
@@ -35,11 +35,11 @@ service NicService {
 }
 
 message RegisterNicRequest {
-  driver.Nic nic = 1;
+  model.Nic nic = 1;
 }
 
 message DeregisterNicRequest {
-  driver.Nic nic = 1;
+  model.Nic nic = 1;
 }
 
 message RegisterNicReply {

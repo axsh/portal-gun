@@ -4,7 +4,7 @@ import (
 	// "fmt"
 
 	"golang.org/x/net/context"
-	"github.com/axsh/vpnhub/driver/network"
+	"github.com/axsh/vpnhub/driver"
 )
 
 type NicService struct {
@@ -13,21 +13,23 @@ type NicService struct {
 
 
 func(a *NicService) Register(ctx context.Context, req *RegisterNicRequest) (*RegisterNicReply, error) {
-	d, err := network.NewNetworkDriver(ctx)
+	nic := req.GetNic()
+	d, err := driver.NewNetworkDriver(ctx, nic.GetDriverType())
 	if err != nil {
 		return nil, err
 	}
 
-	d.RegisterNic(req.GetNic())
+	d.RegisterNic(nic)
 	return &RegisterNicReply{}, nil
 }
 
 func(a *NicService) Deregister(ctx context.Context, req *DeregisterNicRequest) (*DeregisterNicReply, error) {
-	d, err := network.NewNetworkDriver(ctx)
+	nic := req.GetNic()
+	d, err := driver.NewNetworkDriver(ctx, nic.GetDriverType())
 	if err != nil {
 		return nil, err
 	}
 
-	d.RegisterNic(req.GetNic())
+	d.DeregisterNic(nic)
 	return &DeregisterNicReply{}, nil
 }

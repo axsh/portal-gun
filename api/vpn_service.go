@@ -2,7 +2,7 @@ package api
 
 import (
 	"golang.org/x/net/context"
-	"github.com/axsh/vpnhub/driver/vpn"
+	"github.com/axsh/vpnhub/driver"
 )
 
 type VpnService struct {
@@ -10,12 +10,13 @@ type VpnService struct {
 }
 
 func(a *VpnService) Create(ctx context.Context, req *CreateVpnRequest) (*CreateVpnReply, error) {
-	d, err := vpn.NewVpnDriver(ctx)
+	vpn := req.GetVpnServer()
+	d, err := driver.NewVpnDriver(ctx, vpn.GetDriverType())
 	if err != nil {
 		return nil, err
 	}
 
-	if err := d.GenerateConfig(req.GetVpnServer()); err != nil {
+	if err := d.GenerateConfig(vpn); err != nil {
 		return nil, err
 	}
 	if err := d.StartVpn(); err != nil {
@@ -25,7 +26,8 @@ func(a *VpnService) Create(ctx context.Context, req *CreateVpnRequest) (*CreateV
 }
 
 func(a *VpnService) Destroy(ctx context.Context, req *DestroyVpnRequest) (*DestroyVpnReply, error) {
-	d, err := vpn.NewVpnDriver(ctx)
+	vpn := req.GetVpnServer()
+	d, err := driver.NewVpnDriver(ctx, vpn.GetDriverType())
 	if err != nil {
 		return nil, err
 	}

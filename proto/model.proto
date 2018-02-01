@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+package model;
+
+option go_package = "github.com/axsh/vpnhub/model";
+
+// vpn manager messgage
+message VpnServer {
+  enum Type {
+    NONE = 0;
+    SOFTETHER_VPN = 1;
+  }
+
+  Type driver_type = 1;
+  oneof Param {
+    SoftEtherParam softehter = 100;
+  }
+}
+
+message SoftEtherParam {
+  string virtual_hub = 1;
+  string ipv4_network = 2;
+
+  uint32 ipv4_begin_address = 3;
+  uint32 ipv4_end_address = 4;
+  string tap_id = 5;
+}
+
+message  Nic {
+  enum Type {
+    NONE = 0;
+    OPENVNET = 1;
+  }
+  Type driver_type = 1;
+  oneof InterfaceParams {
+    OpenVNetInterface openvnet_interface = 100;
+  }
+}
+
+// network manage message
+message OpenVNetInterface {
+  string interface_id = 1;
+  string network_id = 2;
+
+  message IpLease {
+    string ipv4_address = 1;
+    string mac_lease_id = 2;
+    string network_id = 3;
+  }
+
+  message MacLease {
+    string interface_id = 1;
+    string mac_addr = 2;
+  }
+
+  IpLease iplease = 4;
+  MacLease mac_lease = 5;
+}

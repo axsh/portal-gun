@@ -8,6 +8,9 @@ import (
 	// "golang.org/x/net/context"
 	"github.com/axsh/vpnhub/api"
 	// "google.golang.org/grpc"
+
+	_ "github.com/axsh/vpnhub/driver/network/openvnet"
+	_ "github.com/axsh/vpnhub/driver/vpn/softether"
 )
 
 var (
