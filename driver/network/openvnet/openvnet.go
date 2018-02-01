@@ -17,7 +17,6 @@ func init() {
 	})
 }
 
-
 func(d *OpenVNetDriver) RegisterNic(nic *model.Nic) (string, error) {
 	// p := nic.GetInterfaceParams()
 	fmt.Println("openvnet regitster")
