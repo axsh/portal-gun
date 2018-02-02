@@ -10,10 +10,10 @@ gen:
 	go generate -v ./api/ ./model/
 
 client: deps
-	go build  -v -o ./hubclient ./bin/hubclient/main.go
+	go build  -v -o ./hubclient ./bin/hubclient
 
 server: deps
-	go build  -v -o ./hubserver ./bin/hubserver/main.go
+	go build  -v -o ./hubserver ./bin/hubserver
 
 deps:
 	govendor sync
