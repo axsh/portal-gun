@@ -1,23 +1,22 @@
 package main
 
 import (
-	"net"
 	"fmt"
+	"net"
 	"os"
 	"time"
 
-	"golang.org/x/net/context"
 	"github.com/axsh/vpnhub/api"
 	"github.com/axsh/vpnhub/model"
+	"golang.org/x/net/context"
 	"google.golang.org/grpc"
-
 )
 
-var	hubServerIp string
-var	hubServerPort string
+var hubServerIp string
+var hubServerPort string
 
 type VpnHub struct {
-	conn      *grpc.ClientConn
+	conn *grpc.ClientConn
 }
 
 func (c *VpnHub) Connect(ctx context.Context) error {

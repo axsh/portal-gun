@@ -17,13 +17,13 @@ func init() {
 	})
 }
 
-func(d *OpenVNetDriver) RegisterNic(nic *model.Nic) (string, error) {
+func (d *OpenVNetDriver) RegisterNic(nic *model.Nic) (string, error) {
 	// p := nic.GetInterfaceParams()
 	fmt.Println("openvnet regitster")
 	return "", nil
 }
 
-func(d *OpenVNetDriver) DeregisterNic(nic *model.Nic) (string, error) {
+func (d *OpenVNetDriver) DeregisterNic(nic *model.Nic) (string, error) {
 	return "", nil
 }
 

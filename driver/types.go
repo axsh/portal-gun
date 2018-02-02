@@ -31,7 +31,7 @@ type Vpn interface {
 func createDriver(name string) (Driver, error) {
 	creator, exists := drivers[name]
 	if !exists {
-		knownDrivers:= make([]string, len(drivers))
+		knownDrivers := make([]string, len(drivers))
 		for d, _ := range drivers {
 			knownDrivers = append(knownDrivers, d)
 		}

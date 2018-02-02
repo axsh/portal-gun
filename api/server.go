@@ -10,8 +10,8 @@ import (
 //go:generate protoc -I../proto --go_out=plugins=grpc:${GOPATH}/src ../proto/server.proto
 
 type VpnHubAPIServer struct {
-	listener  net.Listener
-	server    *grpc.Server
+	listener net.Listener
+	server   *grpc.Server
 }
 
 func NewVpnHubAPIServer() *VpnHubAPIServer {

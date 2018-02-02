@@ -1,15 +1,15 @@
 package api
 
 import (
-	"golang.org/x/net/context"
 	"github.com/axsh/vpnhub/driver"
+	"golang.org/x/net/context"
 )
 
 type VpnService struct {
-	api    *VpnHubAPIServer
+	api *VpnHubAPIServer
 }
 
-func(a *VpnService) Create(ctx context.Context, req *CreateVpnRequest) (*CreateVpnReply, error) {
+func (a *VpnService) Create(ctx context.Context, req *CreateVpnRequest) (*CreateVpnReply, error) {
 	vpn := req.GetVpnServer()
 	d, err := driver.NewVpnDriver(ctx, vpn.GetDriverType())
 	if err != nil {
@@ -25,7 +25,7 @@ func(a *VpnService) Create(ctx context.Context, req *CreateVpnRequest) (*CreateV
 	return &CreateVpnReply{}, nil
 }
 
-func(a *VpnService) Destroy(ctx context.Context, req *DestroyVpnRequest) (*DestroyVpnReply, error) {
+func (a *VpnService) Destroy(ctx context.Context, req *DestroyVpnRequest) (*DestroyVpnReply, error) {
 	vpn := req.GetVpnServer()
 	d, err := driver.NewVpnDriver(ctx, vpn.GetDriverType())
 	if err != nil {
