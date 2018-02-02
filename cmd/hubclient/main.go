@@ -3,7 +3,6 @@ package main
 import (
 	"fmt"
 	"net"
-	"os"
 	"time"
 
 	"github.com/axsh/vpnhub/api"
@@ -12,63 +11,66 @@ import (
 	"google.golang.org/grpc"
 )
 
-var hubServerIp string
-var hubServerPort string
 
 type VpnHub struct {
-	conn *grpc.ClientConn
+	serverIp   string
+	serverPort string
+	conn      *grpc.ClientConn
 }
 
-func (c *VpnHub) Connect(ctx context.Context) error {
+func (h *VpnHub) connect(ctx context.Context) error {
 	var err error
 	copts := []grpc.DialOption{
 		grpc.WithInsecure(),
 	}
 
-	endpoint := net.JoinHostPort(hubServerIp, hubServerPort)
-	c.conn, err = grpc.DialContext(ctx, endpoint, copts...)
+	endpoint := net.JoinHostPort(h.serverIp, h.serverPort)
+	h.conn, err = grpc.DialContext(ctx, endpoint, copts...)
 	if err != nil {
 		fmt.Println("failed to connect to server at:", endpoint, err)
 		return err
 	}
-
 	return nil
 }
 
-func newVpnHub() *VpnHub {
-	hubServerIp = "localhost"
-	hubServerPort = "9000"
+func (h *VpnHub) VpnServiceCall(ctx context.Context, req func(c api.VpnServiceClient) error) int {
+	rc := -1
 
-	return &VpnHub{}
+	if err := h.connect(ctx); err != nil {
+		fmt.Println("failed connect")
+		return rc
+	}
+	vpnClient := api.NewVpnServiceClient(h.conn)
+	if err := req(vpnClient); err == nil {
+		rc = 0
+	}
+	defer h.conn.Close()
+	return rc
+}
+
+func (h *VpnHub) NicServiceCall(ctx context.Context, req func(c api.NicServiceClient) error) int {
+	rc := -1
+	if err := h.connect(ctx); err != nil {
+		fmt.Println("failed connect")
+		return rc
+	}
+
+	nicClient := api.NewNicServiceClient(h.conn)
+	if err := req(nicClient); err == nil {
+		rc = 0
+	}
+	defer h.conn.Close()
+	return rc
+}
+
+func NewVpnHub(serverIp string, serverPort string) *VpnHub {
+	return &VpnHub{
+		serverIp: serverIp,
+		serverPort: serverPort,
+	}
 }
 
 func main() {
+	hub := NewVpnHub("localhost", "8002")
 	fmt.Println("Starting vpn client")
-	hub := newVpnHub()
-
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*1)
-	if err := hub.Connect(ctx); err != nil {
-		fmt.Println("failed connect")
-		os.Exit(-1)
-	}
-	defer hub.conn.Close()
-
-	// context.WithValue(ctx, "vpn", "softether")
-
-	// debug code vpn
-	vpnClient := api.NewVpnServiceClient(hub.conn)
-	vpnClient.Create(ctx, &api.CreateVpnRequest{
-		&model.VpnServer{
-			DriverType: model.VpnServer_SOFTETHER_VPN,
-		},
-	})
-
-	// debug code network
-	nicClient := api.NewNicServiceClient(hub.conn)
-	nicClient.Register(ctx, &api.RegisterNicRequest{
-		&model.Nic{
-			DriverType: model.Nic_OPENVNET,
-		},
-	})
-
 }
