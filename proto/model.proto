@@ -4,7 +4,6 @@ package model;
 
 option go_package = "github.com/axsh/vpnhub/model";
 
-// vpn manager messgage
 message VpnServer {
   enum Type {
     NONE = 0;
@@ -37,7 +36,6 @@ message  Nic {
   }
 }
 
-// network manage message
 message OpenVNetInterface {
   string interface_id = 1;
   string network_id = 2;
@@ -48,7 +46,7 @@ message OpenVNetInterface {
     string network_id = 3;
   }
 
-  message MacLease {
+message MacLease {
     string interface_id = 1;
     string mac_addr = 2;
   }

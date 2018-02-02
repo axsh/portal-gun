@@ -72,7 +72,6 @@ func (x Nic_Type) String() string {
 }
 func (Nic_Type) EnumDescriptor() ([]byte, []int) { return fileDescriptor0, []int{2, 0} }
 
-// vpn manager messgage
 type VpnServer struct {
 	DriverType VpnServer_Type `protobuf:"varint,1,opt,name=driver_type,json=driverType,enum=model.VpnServer_Type" json:"driver_type,omitempty"`
 	// Types that are valid to be assigned to Param:
@@ -317,7 +316,6 @@ func _Nic_OneofSizer(msg proto.Message) (n int) {
 	return n
 }
 
-// network manage message
 type OpenVNetInterface struct {
 	InterfaceId string                      `protobuf:"bytes,1,opt,name=interface_id,json=interfaceId" json:"interface_id,omitempty"`
 	NetworkId   string                      `protobuf:"bytes,2,opt,name=network_id,json=networkId" json:"network_id,omitempty"`
