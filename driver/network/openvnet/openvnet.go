@@ -7,7 +7,7 @@ import (
 )
 
 type OpenVNetDriver struct {
-	// params *driver.OpenVNetInterface
+	params *model.OpenVnetParam
 }
 
 func init() {
@@ -17,8 +17,9 @@ func init() {
 }
 
 func (d *OpenVNetDriver) RegisterNic(nic model.NicParam) (string, error) {
-	p := nic.(model.OpenVNetParam)
-	fmt.Println(p)
+	d.params = nic.(*model.OpenVnetParam)
+
+	fmt.Println(d.params.GetIpLease())
 	fmt.Println("openvnet regitster")
 	return "", nil
 }

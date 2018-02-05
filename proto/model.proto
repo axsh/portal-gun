@@ -12,7 +12,7 @@ message VpnDriver {
 
   Type driver_type = 1;
   oneof ServerParams {
-    SoftEtherParam softehter = 100;
+    SoftEtherParam softether_params = 100;
   }
 }
 
@@ -32,11 +32,11 @@ message  NetworkDriver {
   }
   Type driver_type = 1;
   oneof InterfaceParams {
-    OpenVNetParam openvnet_param = 100;
+    OpenVnetParam openvnet_params = 100;
   }
 }
 
-message OpenVNetParam {
+message OpenVnetParam {
   string interface_id = 1;
   string network_id = 2;
 
@@ -51,6 +51,6 @@ message MacLease {
     string mac_addr = 2;
   }
 
-  IpLease iplease = 4;
+  IpLease ip_lease = 4;
   MacLease mac_lease = 5;
 }

@@ -1,6 +1,7 @@
 package api
 
 import (
+	"github.com/pkg/errors"
 	"github.com/axsh/portal-gun/driver"
 	"golang.org/x/net/context"
 )
@@ -16,7 +17,11 @@ func (a *NicService) Register(ctx context.Context, req *RegisterNicRequest) (*Re
 		return nil, err
 	}
 
-	d.RegisterNic(nd.GetNicParams())
+	if p := nd.GetNicParams(); p != nil {
+		d.RegisterNic(p)
+	} else {
+		return nil, errors.Errorf("Missing nic parameters")
+	}
 
 	return &RegisterNicReply{}, nil
 }
@@ -28,7 +33,11 @@ func (a *NicService) Deregister(ctx context.Context, req *DeregisterNicRequest) 
 		return nil, err
 	}
 
-	d.DeregisterNic(nd.GetNicParams())
+	if p := nd.GetNicParams(); p != nil {
+		d.DeregisterNic(p)
+	} else {
+		return nil, errors.Errorf("Missing nic parameters")
+	}
 
 	return &DeregisterNicReply{}, nil
 }

@@ -1,5 +1,11 @@
 package model
 
+import (
+	// "fmt"
+	"reflect"
+	"strings"
+)
+
 //go:generate protoc -I../proto --go_out=plugins=grpc:${GOPATH}/src ../proto/model.proto
 
 type PortalDriver interface {
@@ -13,18 +19,35 @@ func (NetworkDriver_Type) isPortalDriver() {}
 type VpnParam interface {
 	isVpnType()
 }
+
 func (SoftEtherParam) isVpnType() {}
 
 func (d *VpnDriver) GetVpnParams() VpnParam {
-	return d.GetServerParams().(VpnParam)
+	if d == nil {
+		return nil
+	}
+
+	t := reflect.TypeOf(d.ServerParams)
+	driverType := strings.TrimPrefix(t.String(), "*model.VpnDriver_")
+	method := reflect.ValueOf(d).MethodByName(strings.Join([]string{"Get", driverType}, ""))
+	resp := method.Call(nil)
+	return resp[0].Interface().(VpnParam)
 }
 
-type NicParam interface {
-	isNicParam()
+type NicParam interface{
+	isNicType()
 }
 
-func (OpenVNetParam) isNicParam() {}
+func (OpenVnetParam) isNicType() {}
 
 func (d *NetworkDriver) GetNicParams() NicParam {
-	return d.GetInterfaceParams().(NicParam)
+	if d == nil {
+		return nil
+	}
+
+	t := reflect.TypeOf(d.InterfaceParams)
+	driverType := strings.TrimPrefix(t.String(), "*model.NetworkDriver_")
+	method := reflect.ValueOf(d).MethodByName(strings.Join([]string{"Get", driverType}, ""))
+	resp := method.Call(nil)
+	return resp[0].Interface().(NicParam)
 }
