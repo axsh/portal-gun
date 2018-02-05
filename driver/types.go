@@ -1,5 +1,4 @@
 package driver
-
 import (
 	"fmt"
 	"strings"
@@ -16,9 +15,9 @@ type DriverCreator func() (Driver, error)
 
 var drivers map[string]DriverCreator = make(map[string]DriverCreator)
 
-func Register(name string, creator DriverCreator) {
-	drivers[name] = creator
-	fmt.Println("register", name, creator)
+func Register(d model.PortalDriver, creator DriverCreator) {
+	drivers[d.String()] = creator
+	fmt.Println("register", d.String(), creator)
 }
 
 func createDriver(name string) (Driver, error) {
@@ -36,14 +35,14 @@ func createDriver(name string) (Driver, error) {
 }
 
 type Vpn interface {
-	GenerateConfig(p *model.VpnServer) error
+	GenerateConfig(p model.VpnParam) error
 	StartVpn() error
 	StopVpn() error
 	RemoveVpn() error
 }
 
-func GetVpnDriver(ctx context.Context, t model.VpnServer_Type) (Vpn, error) {
-	if t == model.VpnServer_NONE {
+func NewVpnDriver(ctx context.Context, t model.VpnDriver_Type) (Vpn, error) {
+	if t == model.VpnDriver_NONE {
 		return nil, fmt.Errorf("vpn driver not set")
 	}
 
@@ -51,16 +50,18 @@ func GetVpnDriver(ctx context.Context, t model.VpnServer_Type) (Vpn, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return driver.(Vpn), err
 }
 
 type Network interface {
-	RegisterNic(nic *model.Nic) (string, error)
-	DeregisterNic(nic *model.Nic) (string, error)
+	RegisterNic(nic model.NicParam) (string, error)
+	DeregisterNic(nic model.NicParam) (string, error)
 }
 
-func GetNetworkDriver(ctx context.Context, t model.Nic_Type) (Network, error) {
-	if t == model.Nic_NONE {
+// TODO: rename
+func NewNetworkDriver(ctx context.Context, t model.NetworkDriver_Type) (Network, error) {
+	if t == model.NetworkDriver_NONE {
 		return nil, fmt.Errorf("network driver not set")
 	}
 
@@ -68,5 +69,6 @@ func GetNetworkDriver(ctx context.Context, t model.Nic_Type) (Network, error) {
 	if err != nil {
 		return nil, err
 	}
+
 	return driver.(Network), err
 }

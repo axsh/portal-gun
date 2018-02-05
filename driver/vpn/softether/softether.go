@@ -10,15 +10,12 @@ type SoftEtherDriver struct {
 }
 
 func init() {
-	d := model.VpnServer_SOFTETHER_VPN
-
-	driver.Register(d.String(), func() (driver.Driver, error) {
+	driver.Register(model.VpnDriver_SOFTETHER_VPN, func() (driver.Driver, error) {
 		return &SoftEtherDriver{}, nil
 	})
 }
 
-func (d *SoftEtherDriver) GenerateConfig(p *model.VpnServer) error {
-	// params := p.GetParam().(driver.SoftEtherParam)
+func (d *SoftEtherDriver) GenerateConfig(p model.VpnParam) error {
 	fmt.Println("softether config")
 	return nil
 }

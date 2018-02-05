@@ -11,19 +11,19 @@ type OpenVNetDriver struct {
 }
 
 func init() {
-	d := model.Nic_OPENVNET
-	driver.Register(d.String(), func() (driver.Driver, error) {
+	driver.Register(model.NetworkDriver_OPENVNET, func() (driver.Driver, error) {
 		return &OpenVNetDriver{}, nil
 	})
 }
 
-func (d *OpenVNetDriver) RegisterNic(nic *model.Nic) (string, error) {
-	// p := nic.GetInterfaceParams()
+func (d *OpenVNetDriver) RegisterNic(nic model.NicParam) (string, error) {
+	p := nic.(model.OpenVNetParam)
+	fmt.Println(p)
 	fmt.Println("openvnet regitster")
 	return "", nil
 }
 
-func (d *OpenVNetDriver) DeregisterNic(nic *model.Nic) (string, error) {
+func (d *OpenVNetDriver) DeregisterNic(nic model.NicParam) (string, error) {
 	return "", nil
 }
 

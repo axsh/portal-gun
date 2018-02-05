@@ -10,23 +10,25 @@ type NicService struct {
 }
 
 func (a *NicService) Register(ctx context.Context, req *RegisterNicRequest) (*RegisterNicReply, error) {
-	nic := req.GetNic()
-	d, err := driver.GetNetworkDriver(ctx, nic.GetDriverType())
+	nd := req.GetNetworkDriver()
+	d, err := driver.NewNetworkDriver(ctx, nd.GetDriverType())
 	if err != nil {
 		return nil, err
 	}
 
-	d.RegisterNic(nic)
+	d.RegisterNic(nd.GetNicParams())
+
 	return &RegisterNicReply{}, nil
 }
 
 func (a *NicService) Deregister(ctx context.Context, req *DeregisterNicRequest) (*DeregisterNicReply, error) {
-	nic := req.GetNic()
-	d, err := driver.GetNetworkDriver(ctx, nic.GetDriverType())
+	nd := req.GetNetworkDriver()
+	d, err := driver.NewNetworkDriver(ctx, nd.GetDriverType())
 	if err != nil {
 		return nil, err
 	}
 
-	d.DeregisterNic(nic)
+	d.DeregisterNic(nd.GetNicParams())
+
 	return &DeregisterNicReply{}, nil
 }

@@ -14,11 +14,11 @@ service VpnService {
 }
 
 message CreateVpnRequest {
-  model.VpnServer vpn_server = 1;
+  model.VpnDriver vpn_driver = 1;
 }
 
 message DestroyVpnRequest {
-  model.VpnServer vpn_server = 1;
+  model.VpnDriver vpn_driver = 1;
 }
 
 message CreateVpnReply {
@@ -35,11 +35,11 @@ service NicService {
 }
 
 message RegisterNicRequest {
-  model.Nic nic = 1;
+  model.NetworkDriver network_driver = 1;
 }
 
 message DeregisterNicRequest {
-  model.Nic nic = 1;
+  model.NetworkDriver network_driver = 1;
 }
 
 message RegisterNicReply {

@@ -4,14 +4,14 @@ package model;
 
 option go_package = "github.com/axsh/portal-gun/model";
 
-message VpnServer {
+message VpnDriver {
   enum Type {
     NONE = 0;
     SOFTETHER_VPN = 1;
   }
 
   Type driver_type = 1;
-  oneof Param {
+  oneof ServerParams {
     SoftEtherParam softehter = 100;
   }
 }
@@ -25,18 +25,18 @@ message SoftEtherParam {
   string tap_id = 5;
 }
 
-message  Nic {
+message  NetworkDriver {
   enum Type {
     NONE = 0;
     OPENVNET = 1;
   }
   Type driver_type = 1;
   oneof InterfaceParams {
-    OpenVNetInterface openvnet_interface = 100;
+    OpenVNetParam openvnet_param = 100;
   }
 }
 
-message OpenVNetInterface {
+message OpenVNetParam {
   string interface_id = 1;
   string network_id = 2;
 
