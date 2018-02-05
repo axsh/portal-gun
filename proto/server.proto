@@ -2,7 +2,7 @@ syntax = "proto3";
 
 package api;
 
-option go_package = "github.com/axsh/vpnhub/api";
+option go_package = "github.com/axsh/portal-gun/api";
 
 import "model.proto";
 

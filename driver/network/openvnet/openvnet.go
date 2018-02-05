@@ -2,8 +2,8 @@ package openvnet
 
 import (
 	"fmt"
-	"github.com/axsh/vpnhub/driver"
-	"github.com/axsh/vpnhub/model"
+	"github.com/axsh/portal-gun/driver"
+	"github.com/axsh/portal-gun/model"
 )
 
 type OpenVNetDriver struct {

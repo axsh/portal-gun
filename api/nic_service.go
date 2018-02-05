@@ -1,19 +1,17 @@
 package api
 
 import (
-	// "fmt"
-
-	"github.com/axsh/vpnhub/driver"
+	"github.com/axsh/portal-gun/driver"
 	"golang.org/x/net/context"
 )
 
 type NicService struct {
-	api *VpnHubAPIServer
+	api *PortalAPIServer
 }
 
 func (a *NicService) Register(ctx context.Context, req *RegisterNicRequest) (*RegisterNicReply, error) {
 	nic := req.GetNic()
-	d, err := driver.NewNetworkDriver(ctx, nic.GetDriverType())
+	d, err := driver.GetNetworkDriver(ctx, nic.GetDriverType())
 	if err != nil {
 		return nil, err
 	}
@@ -24,7 +22,7 @@ func (a *NicService) Register(ctx context.Context, req *RegisterNicRequest) (*Re
 
 func (a *NicService) Deregister(ctx context.Context, req *DeregisterNicRequest) (*DeregisterNicReply, error) {
 	nic := req.GetNic()
-	d, err := driver.NewNetworkDriver(ctx, nic.GetDriverType())
+	d, err := driver.GetNetworkDriver(ctx, nic.GetDriverType())
 	if err != nil {
 		return nil, err
 	}

@@ -1,19 +1,19 @@
 NAME="vpnhub"
 OWNER="Axsh.co"
 
-build: gen deps client server
+build: protobuf deps client server
 
 test:
 	go test -v
 
-gen:
+protobuf:
 	go generate -v ./api/ ./model/
 
 client: deps
-	go build  -v -o ./hubclient ./cmd/hubclient
+	go build  -v -o ./portal-client ./cmd/portal-client
 
 server: deps
-	go build  -v -o ./hubserver ./cmd/hubserver
+	go build  -v -o ./portal-server ./cmd/portal-server
 
 deps:
 	govendor sync

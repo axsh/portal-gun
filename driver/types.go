@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/axsh/vpnhub/model"
+	"github.com/axsh/portal-gun/model"
 	"golang.org/x/net/context"
 )
 
@@ -21,13 +21,6 @@ func Register(name string, creator DriverCreator) {
 	fmt.Println("register", name, creator)
 }
 
-type Vpn interface {
-	GenerateConfig(p *model.VpnServer) error
-	StartVpn() error
-	StopVpn() error
-	RemoveVpn() error
-}
-
 func createDriver(name string) (Driver, error) {
 	creator, exists := drivers[name]
 	if !exists {
@@ -42,12 +35,22 @@ func createDriver(name string) (Driver, error) {
 	return creator()
 }
 
-func NewVpnDriver(ctx context.Context, t model.VpnServer_Type) (Vpn, error) {
+type Vpn interface {
+	GenerateConfig(p *model.VpnServer) error
+	StartVpn() error
+	StopVpn() error
+	RemoveVpn() error
+}
+
+func GetVpnDriver(ctx context.Context, t model.VpnServer_Type) (Vpn, error) {
 	if t == model.VpnServer_NONE {
 		return nil, fmt.Errorf("vpn driver not set")
 	}
 
 	driver, err := createDriver(t.String())
+	if err != nil {
+		return nil, err
+	}
 	return driver.(Vpn), err
 }
 
@@ -56,11 +59,14 @@ type Network interface {
 	DeregisterNic(nic *model.Nic) (string, error)
 }
 
-func NewNetworkDriver(ctx context.Context, t model.Nic_Type) (Network, error) {
+func GetNetworkDriver(ctx context.Context, t model.Nic_Type) (Network, error) {
 	if t == model.Nic_NONE {
 		return nil, fmt.Errorf("network driver not set")
 	}
 
 	driver, err := createDriver(t.String())
+	if err != nil {
+		return nil, err
+	}
 	return driver.(Network), err
 }
