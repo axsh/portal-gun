@@ -10,6 +10,7 @@ import (
 
 type Driver interface {
 	IsDriver()
+	DriverType() model.PortalDriver
 }
 
 type DriverCreator func() (Driver, error)

@@ -49,6 +49,6 @@ func (d *NetworkDriver) GetNicParams() NicParam {
 	driverType := strings.TrimPrefix(t.String(), "*model.NetworkDriver_")
 	method := reflect.ValueOf(d).MethodByName(strings.Join([]string{"Get", driverType}, ""))
 	// might want a better solution, call() is slow
-	resp := methodName.Call(nil)
+	resp := method.Call(nil)
 	return resp[0].Interface().(NicParam)
 }

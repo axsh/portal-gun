@@ -7,7 +7,8 @@ option go_package = "github.com/axsh/portal-gun/model";
 message VpnDriver {
   enum Type {
     NONE = 0;
-    SOFTETHER_VPN = 1;
+    NULL_VPN = 1;
+    SOFTETHER_VPN = 2;
   }
 
   Type driver_type = 1;
@@ -28,7 +29,8 @@ message SoftEtherParam {
 message  NetworkDriver {
   enum Type {
     NONE = 0;
-    OPENVNET = 1;
+    NULL_NET = 1;
+    OPENVNET = 2;
   }
   Type driver_type = 1;
   oneof InterfaceParams {
