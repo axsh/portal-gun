@@ -1,7 +1,6 @@
 package model
 
 import (
-	// "fmt"
 	"reflect"
 	"strings"
 )
@@ -30,6 +29,7 @@ func (d *VpnDriver) GetVpnParams() VpnParam {
 	t := reflect.TypeOf(d.ServerParams)
 	driverType := strings.TrimPrefix(t.String(), "*model.VpnDriver_")
 	method := reflect.ValueOf(d).MethodByName(strings.Join([]string{"Get", driverType}, ""))
+	// might want a better solution, call() is slow
 	resp := method.Call(nil)
 	return resp[0].Interface().(VpnParam)
 }
@@ -48,6 +48,7 @@ func (d *NetworkDriver) GetNicParams() NicParam {
 	t := reflect.TypeOf(d.InterfaceParams)
 	driverType := strings.TrimPrefix(t.String(), "*model.NetworkDriver_")
 	method := reflect.ValueOf(d).MethodByName(strings.Join([]string{"Get", driverType}, ""))
-	resp := method.Call(nil)
+	// might want a better solution, call() is slow
+	resp := methodName.Call(nil)
 	return resp[0].Interface().(NicParam)
 }
