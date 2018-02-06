@@ -12,7 +12,7 @@ import (
 type Portal struct {
 	hostIp   string
 	hostPort string
-	conn      *grpc.ClientConn
+	conn     *grpc.ClientConn
 }
 
 func (p *Portal) connect(ctx context.Context) error {
@@ -65,7 +65,7 @@ func (p *Portal) NicServiceRequest(ctx context.Context, req func(c NicServiceCli
 
 func NewPortal(hostIp string, hostPort string) *Portal {
 	return &Portal{
-		hostIp: hostIp,
+		hostIp:   hostIp,
 		hostPort: hostPort,
 	}
 }

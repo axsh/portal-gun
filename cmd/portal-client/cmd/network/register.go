@@ -4,10 +4,10 @@ import (
 	"fmt"
 	"time"
 
+	"github.com/axsh/portal-gun/api"
+	"github.com/axsh/portal-gun/model"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/context"
-	"github.com/axsh/portal-gun/model"
-	"github.com/axsh/portal-gun/api"
 )
 
 var RegisterNic = &cobra.Command{

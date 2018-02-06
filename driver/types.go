@@ -1,10 +1,11 @@
 package driver
+
 import (
 	"fmt"
 	"strings"
 
-	"github.com/pkg/errors"
 	"github.com/axsh/portal-gun/model"
+	"github.com/pkg/errors"
 	"golang.org/x/net/context"
 )
 

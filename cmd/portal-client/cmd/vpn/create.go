@@ -3,16 +3,16 @@ package vpn
 import (
 	"time"
 
+	"github.com/axsh/portal-gun/api"
+	"github.com/axsh/portal-gun/model"
 	"github.com/spf13/cobra"
 	"golang.org/x/net/context"
-	"github.com/axsh/portal-gun/model"
-	"github.com/axsh/portal-gun/api"
 )
 
 var CreateVpn = &cobra.Command{
-	Use: "create [options]",
+	Use:   "create [options]",
 	Short: "",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*1)
 		portal := api.NewPortal("0.0.0.0", "8002")
@@ -28,6 +28,5 @@ var CreateVpn = &cobra.Command{
 			})
 			return nil
 		})
-
 	},
 }

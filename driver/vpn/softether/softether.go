@@ -33,5 +33,5 @@ func (d *SoftEtherDriver) RemoveVpn() error {
 	return nil
 }
 
-func (*SoftEtherDriver) IsDriver() {}
+func (*SoftEtherDriver) IsDriver()                      {}
 func (*SoftEtherDriver) DriverType() model.PortalDriver { return model.VpnDriver_SOFTETHER_VPN }

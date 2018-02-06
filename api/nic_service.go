@@ -1,8 +1,8 @@
 package api
 
 import (
-	"github.com/pkg/errors"
 	"github.com/axsh/portal-gun/driver"
+	"github.com/pkg/errors"
 	"golang.org/x/net/context"
 )
 

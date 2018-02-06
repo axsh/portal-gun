@@ -12,7 +12,7 @@ type PortalDriver interface {
 	String() string
 }
 
-func (VpnDriver_Type) isPortalDriver() {}
+func (VpnDriver_Type) isPortalDriver()     {}
 func (NetworkDriver_Type) isPortalDriver() {}
 
 type VpnParam interface {
@@ -34,7 +34,7 @@ func (d *VpnDriver) GetVpnParams() VpnParam {
 	return resp[0].Interface().(VpnParam)
 }
 
-type NicParam interface{
+type NicParam interface {
 	isNicType()
 }
 

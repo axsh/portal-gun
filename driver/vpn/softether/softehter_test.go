@@ -3,8 +3,8 @@ package softether
 import (
 	"testing"
 
-	"github.com/axsh/portal-gun/model"
 	"github.com/axsh/portal-gun/driver"
+	"github.com/axsh/portal-gun/model"
 	"github.com/stretchr/testify/assert"
 )
 

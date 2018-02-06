@@ -7,9 +7,9 @@ import (
 )
 
 var DeregisterNic = &cobra.Command{
-	Use: "deregister [options]",
+	Use:   "deregister [options]",
 	Short: "",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
 	},

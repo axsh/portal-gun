@@ -48,7 +48,7 @@ message OpenVnetParam {
     string network_id = 3;
   }
 
-message MacLease {
+  message MacLease {
     string interface_id = 1;
     string mac_addr = 2;
   }

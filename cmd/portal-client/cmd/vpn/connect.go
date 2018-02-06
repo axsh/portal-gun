@@ -7,9 +7,9 @@ import (
 )
 
 var ConnectVpn = &cobra.Command{
-	Use: "connect [options]",
+	Use:   "connect [options]",
 	Short: "",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
 	},

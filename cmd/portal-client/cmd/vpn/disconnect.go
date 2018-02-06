@@ -7,9 +7,9 @@ import (
 )
 
 var DisconnectVpn = &cobra.Command{
-	Use: "disconnect [options]",
+	Use:   "disconnect [options]",
 	Short: "",
-	Long: ``,
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
 	},

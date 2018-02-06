@@ -15,12 +15,12 @@ var rootCmd = &cobra.Command{
 }
 
 var networkCmd = &cobra.Command{
-	Use: "network [command]",
+	Use:   "network [command]",
 	Short: "Manage nics on the virtualized network",
 }
 
 var vpnCmd = &cobra.Command{
-	Use: "vpn [command]",
+	Use:   "vpn [command]",
 	Short: "Manage vpn service",
 }
 
