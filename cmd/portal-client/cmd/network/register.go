@@ -11,6 +11,7 @@ import (
 
 var RegisterNic = &cobra.Command{
 	Use: "register [options]",
+	Short: "Register ip/mac leases to be part of a virtual network",
 	Long: ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*1)

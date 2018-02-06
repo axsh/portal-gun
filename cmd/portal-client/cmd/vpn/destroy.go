@@ -7,8 +7,8 @@ import (
 )
 
 var DestroyVpn = &cobra.Command{
-	Use:   "destroy [options]",
-	Short: "",
+	Use:   "destroy [vpnid] [options]",
+	Short: "Destroy the vpn service",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)

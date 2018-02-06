@@ -11,7 +11,7 @@ import (
 
 var CreateVpn = &cobra.Command{
 	Use:   "create [options]",
-	Short: "",
+	Short: "Create a new vpn server",
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*1)

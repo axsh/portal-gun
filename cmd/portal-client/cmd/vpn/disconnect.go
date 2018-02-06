@@ -7,8 +7,8 @@ import (
 )
 
 var DisconnectVpn = &cobra.Command{
-	Use:   "disconnect [options]",
-	Short: "",
+	Use:   "disconnect [subnet] [options]",
+	Short: "Completely disconnect a subnet and all its nics from the virtual network",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)

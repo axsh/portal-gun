@@ -16,7 +16,7 @@ var rootCmd = &cobra.Command{
 
 var networkCmd = &cobra.Command{
 	Use:   "network [command]",
-	Short: "Manage nics on the virtualized network",
+	Short: "Manage nics on virtual network",
 }
 
 var vpnCmd = &cobra.Command{

@@ -8,7 +8,7 @@ import (
 
 var DeregisterNic = &cobra.Command{
 	Use:   "deregister [options]",
-	Short: "",
+	Short: "Remove ip/mac lease from virtual network",
 	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println(args)
