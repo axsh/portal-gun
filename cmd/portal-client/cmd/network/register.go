@@ -1,7 +1,6 @@
 package network
 
 import (
-	"fmt"
 	"time"
 
 	"github.com/axsh/portal-gun/api"
@@ -12,16 +11,13 @@ import (
 
 var RegisterNic = &cobra.Command{
 	Use: "register [options]",
-
 	Long: ``,
-	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println(args)
-
+	RunE: func(cmd *cobra.Command, args []string) error {
 		ctx, _ := context.WithTimeout(context.Background(), time.Second*1)
 		portal := api.NewPortal("0.0.0.0", "8002")
 
-		portal.NicServiceRequest(ctx, func(c api.NicServiceClient) error {
-			c.Register(ctx, &api.RegisterNicRequest{
+		return portal.NicServiceRequest(ctx, func(c api.NicServiceClient) error {
+			_, e := c.Register(ctx, &api.RegisterNicRequest{
 				&model.NetworkDriver{
 					DriverType: model.NetworkDriver_OPENVNET,
 					InterfaceParams: &model.NetworkDriver_OpenvnetParams{
@@ -33,8 +29,7 @@ var RegisterNic = &cobra.Command{
 					},
 				},
 			})
-			return nil
+			return e
 		})
-
 	},
 }

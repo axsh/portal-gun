@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net"
 
 	"github.com/pkg/errors"
@@ -31,36 +30,32 @@ func (p *Portal) connect(ctx context.Context) error {
 	return nil
 }
 
-func (p *Portal) VpnServiceRequest(ctx context.Context, req func(c VpnServiceClient) error) int {
-	rc := -1
-
+func (p *Portal) VpnServiceRequest(ctx context.Context, req func(c VpnServiceClient) error) error {
 	if err := p.connect(ctx); err != nil {
-		fmt.Println("failed connection to vpn service")
-		return rc
+		return err
 	}
+
 	vpnClient := NewVpnServiceClient(p.conn)
 	if err := req(vpnClient); err == nil {
-		rc = 0
+		return err
 	}
 
 	defer p.conn.Close()
-	return rc
+	return nil
 }
 
-func (p *Portal) NicServiceRequest(ctx context.Context, req func(c NicServiceClient) error) int {
-	rc := -1
+func (p *Portal) NicServiceRequest(ctx context.Context, req func(c NicServiceClient) error) error {
 	if err := p.connect(ctx); err != nil {
-		fmt.Println("failed connection to network service")
-		return rc
+		return err
 	}
 
 	nicClient := NewNicServiceClient(p.conn)
 	if err := req(nicClient); err == nil {
-		rc = 0
+		return err
 	}
 
 	defer p.conn.Close()
-	return rc
+	return nil
 }
 
 func NewPortal(hostIp string, hostPort string) *Portal {
