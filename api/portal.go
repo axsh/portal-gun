@@ -2,22 +2,53 @@ package api
 
 import (
 	"net"
+	"time"
 
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
+	"google.golang.org/grpc/credentials"
+	"google.golang.org/grpc/metadata"
 )
 
-type Portal struct {
-	hostIp   string
-	hostPort string
-	conn     *grpc.ClientConn
+type PortalClient struct {
+	hostIp    string
+	hostPort  string
+	conn      *grpc.ClientConn
+	insecure  bool
+	certKey   string
+	authToken string
 }
 
-func (p *Portal) connect(ctx context.Context) error {
+func (p *PortalClient) addClientOpts() ([]grpc.DialOption, error) {
+	opts := []grpc.DialOption{}
+
+	if !p.insecure {
+		opts = append(opts, grpc.WithInsecure())
+		return opts, nil
+	} else {
+		if len(p.certKey) == 0 {
+			return nil, errors.Errorf("missing certificate")
+		}
+		creds, err := credentials.NewClientTLSFromFile(p.certKey, "")
+		if err != nil {
+			return nil, errors.Wrapf(err, "unable to load cert key: %s", p.certKey)
+		}
+		opts = append(opts, grpc.WithTransportCredentials(creds))
+	}
+	return opts, nil
+}
+
+func (p *PortalClient) connect(ctx context.Context) error {
 	var err error
-	copts := []grpc.DialOption{
-		grpc.WithInsecure(),
+	copts, err := p.addClientOpts()
+	if err != nil {
+		return err
+	}
+
+	if len(p.authToken) > 0 {
+		md := metadata.Pairs("authToken", p.authToken)
+		ctx = metadata.NewOutgoingContext(ctx, md)
 	}
 
 	endpoint := net.JoinHostPort(p.hostIp, p.hostPort)
@@ -30,7 +61,7 @@ func (p *Portal) connect(ctx context.Context) error {
 	return nil
 }
 
-func (p *Portal) VpnServiceRequest(ctx context.Context, req func(c VpnServiceClient) error) error {
+func (p *PortalClient) VpnServiceRequest(ctx context.Context, req func(c VpnServiceClient) error) error {
 	if err := p.connect(ctx); err != nil {
 		return err
 	}
@@ -44,7 +75,7 @@ func (p *Portal) VpnServiceRequest(ctx context.Context, req func(c VpnServiceCli
 	return nil
 }
 
-func (p *Portal) NicServiceRequest(ctx context.Context, req func(c NicServiceClient) error) error {
+func (p *PortalClient) NicServiceRequest(ctx context.Context, req func(c NicServiceClient) error) error {
 	if err := p.connect(ctx); err != nil {
 		return err
 	}
@@ -58,9 +89,13 @@ func (p *Portal) NicServiceRequest(ctx context.Context, req func(c NicServiceCli
 	return nil
 }
 
-func NewPortal(hostIp string, hostPort string) *Portal {
-	return &Portal{
-		hostIp:   hostIp,
-		hostPort: hostPort,
-	}
+func NewPortalClient(host string, port string) (*PortalClient, context.Context) {
+	ctx, _ := context.WithTimeout(context.Background(), time.Second*1)
+	return &PortalClient{
+		hostIp:    host,
+		hostPort:  port,
+		// insecure:  insecure,
+		// authToken: token,
+		// certKey:   key,
+	}, ctx
 }
