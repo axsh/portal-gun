@@ -60,20 +60,20 @@ func startServer(cmd *cobra.Command, args []string) {
 	// 	ValidationToken: token,
 	// }
 
-	portal, err := api.NewPortalAPIServer(settings)
+	portalServer, err := api.NewPortalAPIServer(settings)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
 	}
 	errChan := make(chan error)
 	go func() {
-		if err := portal.Serve(l); err != nil {
+		if err := portalServer.Serve(l); err != nil {
 			fmt.Println("server failed")
 			errChan <-err
 			return
 		}
 	}()
-	defer portal.GracefulStop()
+	defer portalServer.GracefulStop()
 	<-errChan
 }
 

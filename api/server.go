@@ -1,7 +1,9 @@
 package api
 
 import (
+	"fmt"
 	"net"
+	"strings"
 
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
@@ -24,33 +26,43 @@ type ServerSettings struct {
 	Token    string
 }
 
+var serverCtx = "portalGun.server.ctx"
+
+func authClient(ctx context.Context, validToken string) (string, error) {
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
+		if token := strings.Join(md["auth_token"], ""); token != validToken {
+			return "", errors.Errorf("Invalid token, wants %s, got %s", validToken, token)
+		}
+		return strings.Join(md["client_id"], ""), nil
+	}
+
+	return "", errors.Errorf("missing metadata")
+}
+
 func NewPortalAPIServer(settings ServerSettings) (*PortalAPIServer, error) {
 	sopts := []grpc.ServerOption{}
 
 	if len(settings.Token) > 0 {
-		// todo: fix this, its just for trying metadata/unary interceptor
 		interceptor := func(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
-			md, ok := metadata.FromIncomingContext(ctx)
-			if !ok {
-				return nil, errors.Errorf("missing context metadata")
-			}
-			if len(md["authToken"]) != 1 || md["authToken"][0] != settings.Token {
-				return nil, errors.Errorf("invalid token")
+			clientId, err := authClient(ctx, settings.Token)
+			if err != nil {
+				return nil, errors.Wrapf(err, "failed to authenticate client")
 			}
 
+			ctx = context.WithValue(ctx, serverCtx, clientId)
 			return handler(ctx, req)
 		}
 		sopts = append(sopts, grpc.UnaryInterceptor(interceptor))
 	}
 
 	if !settings.Insecure {
+		fmt.Println("adding cert")
 		if len(settings.CertFile) == 0 {
 			return nil, errors.Errorf("cert file not specified")
 		}
 		if len(settings.KeyFile) == 0 {
 			return nil, errors.Errorf("key file not specified")
 		}
-
 		creds, err := credentials.NewServerTLSFromFile(settings.CertFile, settings.KeyFile)
 		if err != nil {
 			return nil, errors.Wrapf(err, "failed NewServerTLSFromFile()")

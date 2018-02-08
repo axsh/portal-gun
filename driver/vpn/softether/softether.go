@@ -29,7 +29,6 @@ func (d *SoftEtherDriver) StopVpn() error {
 }
 
 func (d *SoftEtherDriver) RemoveVpn() error {
-
 	return nil
 }
 

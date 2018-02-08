@@ -25,7 +25,6 @@ var createVpn = &cobra.Command{
 			})
 			return e
 		})
-		return nil
 	},
 }
 

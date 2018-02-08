@@ -14,7 +14,6 @@ var registerNic = &cobra.Command{
 	Long: ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
 		portal, ctx := util.PrepareApiClient()
-
 		return portal.NicServiceRequest(ctx, func(c api.NicServiceClient) error {
 			_, e := c.Register(ctx, &api.RegisterNicRequest{
 				&model.NetworkDriver{

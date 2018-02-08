@@ -2,7 +2,6 @@ package api
 
 import (
 	"net"
-	"time"
 
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
@@ -16,44 +15,42 @@ type PortalClient struct {
 	hostPort  string
 	conn      *grpc.ClientConn
 	insecure  bool
-	certKey   string
+	certFile  string
 	authToken string
 }
 
-func (p *PortalClient) addSecureOpts() ([]grpc.DialOption, error) {
-	opts := []grpc.DialOption{}
+var clientCtx = "portalGun.client.ctx"
 
-	if !p.insecure {
-		opts = append(opts, grpc.WithInsecure())
-		return opts, nil
-	} else {
-		if len(p.certKey) == 0 {
-			return nil, errors.Errorf("missing certificate")
-		}
-		creds, err := credentials.NewClientTLSFromFile(p.certKey, "")
-		if err != nil {
-			return nil, errors.Wrapf(err, "unable to load cert key: %s", p.certKey)
-		}
-		opts = append(opts, grpc.WithTransportCredentials(creds))
+func (p *PortalClient) addSecureOpts() ([]grpc.DialOption, error) {
+	if p.insecure {
+		return []grpc.DialOption{
+			grpc.WithInsecure(),
+		}, nil
 	}
-	return opts, nil
+
+	if len(p.certFile) == 0 {
+		return nil, errors.Errorf("missing certificate")
+	}
+	creds, err := credentials.NewClientTLSFromFile(p.certFile, "")
+	if err != nil {
+		return nil, errors.Wrapf(err, "unable to load cert key: %s", p.certFile)
+	}
+	return []grpc.DialOption{
+		grpc.WithTransportCredentials(creds),
+	}, nil
 }
 
 func (p *PortalClient) connect(ctx context.Context) error {
 	var err error
-	copts := []grpc.DialOption{}
 
+	copts := []grpc.DialOption{}
 	if copts, err = p.addSecureOpts(); err != nil {
 		return err
 	}
 
-	if len(p.authToken) > 0 {
-		md := metadata.Pairs("authToken", p.authToken)
-		ctx = metadata.NewOutgoingContext(ctx, md)
-	}
-
 	endpoint := net.JoinHostPort(p.hostIp, p.hostPort)
 	p.conn, err = grpc.DialContext(ctx, endpoint, copts...)
+
 	if err != nil {
 		errors.Wrapf(err, "failed to connect to server at: %s", endpoint)
 		return err
@@ -80,7 +77,6 @@ func (p *PortalClient) NicServiceRequest(ctx context.Context, req func(c NicServ
 	if err := p.connect(ctx); err != nil {
 		return err
 	}
-
 	nicClient := NewNicServiceClient(p.conn)
 	if err := req(nicClient); err == nil {
 		return err
@@ -90,13 +86,21 @@ func (p *PortalClient) NicServiceRequest(ctx context.Context, req func(c NicServ
 	return nil
 }
 
-func NewPortalClient(ip string, port string, insecure bool, key string, token string) (*PortalClient, context.Context) {
-	ctx, _ := context.WithTimeout(context.Background(), time.Second*1)
+func NewPortalClient(ip string, port string, insecure bool, cert string, token string) (*PortalClient, context.Context) {
+	ctx := context.Background()
+	if len(token) > 0 {
+		md := metadata.Pairs(
+			"auth_token", token,
+			"client_id", clientCtx,
+		)
+		ctx = metadata.NewOutgoingContext(ctx, md)
+	}
+	// ctx, _ := context.WithTimeout(context.Background(), time.Second*3)
 	return &PortalClient{
 		hostIp: ip,
 		hostPort: port,
 		insecure: insecure,
-		certKey: key,
+		certFile: cert,
 		authToken: token,
 	}, ctx
 }
