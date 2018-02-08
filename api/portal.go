@@ -20,7 +20,7 @@ type PortalClient struct {
 	authToken string
 }
 
-func (p *PortalClient) addClientOpts() ([]grpc.DialOption, error) {
+func (p *PortalClient) addSecureOpts() ([]grpc.DialOption, error) {
 	opts := []grpc.DialOption{}
 
 	if !p.insecure {
@@ -41,8 +41,9 @@ func (p *PortalClient) addClientOpts() ([]grpc.DialOption, error) {
 
 func (p *PortalClient) connect(ctx context.Context) error {
 	var err error
-	copts, err := p.addClientOpts()
-	if err != nil {
+	copts := []grpc.DialOption{}
+
+	if copts, err = p.addSecureOpts(); err != nil {
 		return err
 	}
 
@@ -89,13 +90,13 @@ func (p *PortalClient) NicServiceRequest(ctx context.Context, req func(c NicServ
 	return nil
 }
 
-func NewPortalClient(host string, port string) (*PortalClient, context.Context) {
+func NewPortalClient(ip string, port string, insecure bool, key string, token string) (*PortalClient, context.Context) {
 	ctx, _ := context.WithTimeout(context.Background(), time.Second*1)
 	return &PortalClient{
-		hostIp:    host,
-		hostPort:  port,
-		// insecure:  insecure,
-		// authToken: token,
-		// certKey:   key,
+		hostIp: ip,
+		hostPort: port,
+		insecure: insecure,
+		certKey: key,
+		authToken: token,
 	}, ctx
 }

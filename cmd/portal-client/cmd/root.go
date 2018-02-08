@@ -4,40 +4,49 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/axsh/portal-gun/cmd/portal-client/cmd/network"
-	"github.com/axsh/portal-gun/cmd/portal-client/cmd/vpn"
 	"github.com/spf13/cobra"
 )
 
-var rootCmd = &cobra.Command{
+var RootCmd = &cobra.Command{
 	Use:   "portal-client [sub]",
 	Short: "",
 }
 
-var networkCmd = &cobra.Command{
+var NetworkCmd = &cobra.Command{
 	Use:   "network [command]",
 	Short: "Manage nics on virtual network",
 }
 
-var vpnCmd = &cobra.Command{
+var VpnCmd = &cobra.Command{
 	Use:   "vpn [command]",
 	Short: "Manage vpn service",
 }
 
+var Settings struct {
+	Insecure   bool
+	ServerIp   string
+	CertKey    string
+	AuthToken  string
+	ServerPort string
+}
+
+func AddSubCommand(parent *cobra.Command, child *cobra.Command) {
+	parent.AddCommand(child)
+}
+
 func Execute() {
-	rootCmd.AddCommand(networkCmd)
-	rootCmd.AddCommand(vpnCmd)
-
-	networkCmd.AddCommand(network.DeregisterNic)
-	networkCmd.AddCommand(network.RegisterNic)
-
-	vpnCmd.AddCommand(vpn.CreateVpn)
-	vpnCmd.AddCommand(vpn.DestroyVpn)
-	vpnCmd.AddCommand(vpn.ConnectVpn)
-	vpnCmd.AddCommand(vpn.DisconnectVpn)
-
-	if err := rootCmd.Execute(); err != nil {
+	RootCmd.AddCommand(NetworkCmd)
+	RootCmd.AddCommand(VpnCmd)
+	if err := RootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
+}
+
+func init() {
+	RootCmd.PersistentFlags().StringVarP(&Settings.ServerIp, "server", "s", "0.0.0.0", "host ip of portal gun server")
+	RootCmd.PersistentFlags().StringVarP(&Settings.ServerPort, "port", "p", "8002", "listening port of portal gun server")
+	RootCmd.PersistentFlags().BoolVarP(&Settings.Insecure, "insecure", "", true, "disable certification")
+	RootCmd.PersistentFlags().StringVarP(&Settings.CertKey, "cert", "c", "", "certificate file")
+	RootCmd.PersistentFlags().StringVarP(&Settings.AuthToken, "token", "t", "", "authorization token")
 }

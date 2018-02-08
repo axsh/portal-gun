@@ -1,22 +1,19 @@
 package vpn
 
 import (
-	"time"
-
 	"github.com/axsh/portal-gun/api"
 	"github.com/axsh/portal-gun/model"
+	"github.com/axsh/portal-gun/cmd/portal-client/cmd"
+	"github.com/axsh/portal-gun/cmd/portal-client/cmd/util"
 	"github.com/spf13/cobra"
-	"golang.org/x/net/context"
 )
 
-var CreateVpn = &cobra.Command{
+var createVpn = &cobra.Command{
 	Use:   "create [options]",
 	Short: "Create a new vpn server",
 	Long:  ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ctx, _ := context.WithTimeout(context.Background(), time.Second*1)
-		portal := api.NewPortal("0.0.0.0", "8002")
-
+		portal, ctx := util.PrepareApiClient()
 		return portal.VpnServiceRequest(ctx, func(c api.VpnServiceClient) error {
 			_, e := c.Create(ctx, &api.CreateVpnRequest{
 				&model.VpnDriver{
@@ -28,5 +25,10 @@ var CreateVpn = &cobra.Command{
 			})
 			return e
 		})
+		return nil
 	},
+}
+
+func init() {
+	cmd.AddSubCommand(cmd.VpnCmd, createVpn)
 }

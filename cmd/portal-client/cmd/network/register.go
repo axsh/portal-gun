@@ -1,21 +1,19 @@
 package network
 
 import (
-	"time"
-
+	"github.com/axsh/portal-gun/cmd/portal-client/cmd"
+	"github.com/axsh/portal-gun/cmd/portal-client/cmd/util"
 	"github.com/axsh/portal-gun/api"
 	"github.com/axsh/portal-gun/model"
 	"github.com/spf13/cobra"
-	"golang.org/x/net/context"
 )
 
-var RegisterNic = &cobra.Command{
+var registerNic = &cobra.Command{
 	Use: "register [options]",
 	Short: "Register ip/mac leases to be part of a virtual network",
 	Long: ``,
 	RunE: func(cmd *cobra.Command, args []string) error {
-		ctx, _ := context.WithTimeout(context.Background(), time.Second*1)
-		portal := api.NewPortal("0.0.0.0", "8002")
+		portal, ctx := util.PrepareApiClient()
 
 		return portal.NicServiceRequest(ctx, func(c api.NicServiceClient) error {
 			_, e := c.Register(ctx, &api.RegisterNicRequest{
@@ -33,4 +31,8 @@ var RegisterNic = &cobra.Command{
 			return e
 		})
 	},
+}
+
+func init() {
+	cmd.AddSubCommand(cmd.NetworkCmd, registerNic)
 }
