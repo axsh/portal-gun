@@ -1,7 +1,6 @@
 package api
 
 import (
-	"fmt"
 	"net"
 	"strings"
 
@@ -26,14 +25,15 @@ type ServerSettings struct {
 	Token    string
 }
 
+// dummy token
 var serverCtx = "portalGun.server.ctx"
 
 func authClient(ctx context.Context, validToken string) (string, error) {
 	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		if token := strings.Join(md["auth_token"], ""); token != validToken {
-			return "", errors.Errorf("Invalid token, wants %s, got %s", validToken, token)
+			return "", errors.Errorf("Invalid token")
 		}
-		return strings.Join(md["client_id"], ""), nil
+		return strings.Join(md["id"], ""), nil
 	}
 
 	return "", errors.Errorf("missing metadata")
@@ -56,7 +56,6 @@ func NewPortalAPIServer(settings ServerSettings) (*PortalAPIServer, error) {
 	}
 
 	if !settings.Insecure {
-		fmt.Println("adding cert")
 		if len(settings.CertFile) == 0 {
 			return nil, errors.Errorf("cert file not specified")
 		}

@@ -48,5 +48,5 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&Settings.ServerPort, "port", "p", "8002", "listening port of portal gun server")
 	RootCmd.PersistentFlags().BoolVarP(&Settings.Insecure, "insecure", "", true, "disable certification")
 	RootCmd.PersistentFlags().StringVarP(&Settings.CertKey, "cert", "c", "", "certificate file")
-	RootCmd.PersistentFlags().StringVarP(&Settings.AuthToken, "token", "t", "", "authorization token")
+	RootCmd.PersistentFlags().StringVarP(&Settings.AuthToken, "auth-token", "t", "", "authorization token")
 }

@@ -47,18 +47,11 @@ func startServer(cmd *cobra.Command, args []string) {
 	}
 
 	settings := api.ServerSettings{
-		Insecure: false,
-		CertFile: "/tmp/cert",
-		KeyFile:  "/tmp/key",
+		Insecure: true,
+		CertFile: "cert/server.crt",
+		KeyFile:  "cert/server.key",
 		Token:    "portalGun",
 	}
-
-	// } // settings := api.ServerSettings{
-	// 	Insecure:        insecure,
-	// 	CertFile:        certFile,
-	// 	CertKey:         certKey,
-	// 	ValidationToken: token,
-	// }
 
 	portalServer, err := api.NewPortalAPIServer(settings)
 	if err != nil {

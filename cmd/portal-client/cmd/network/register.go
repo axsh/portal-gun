@@ -1,6 +1,8 @@
 package network
 
 import (
+	"fmt"
+
 	"github.com/axsh/portal-gun/cmd/portal-client/cmd"
 	"github.com/axsh/portal-gun/cmd/portal-client/cmd/util"
 	"github.com/axsh/portal-gun/api"
@@ -27,7 +29,11 @@ var registerNic = &cobra.Command{
 					},
 				},
 			})
-			return e
+			if e != nil {
+				fmt.Println(e)
+				return e
+			}
+			return nil
 		})
 	},
 }
