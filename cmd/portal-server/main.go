@@ -11,49 +11,37 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "hubserver",
+	Use:   "portal-server",
 	Short: "Run the server process",
 	Long:  ``,
-	Example: `
-    options
-
-    '--cert' can be used to specify the location a key for credentials
-
-      $ portal-server --key=/home/.ssh/server-key.pem
-
-    '--insecure' can be set to enable/disable certification requirement.
-
-      $ portal-server --insecure
-
-    '--port' and '--host' can be used to explicitly set where to listen for connections.
-
-      $ portal-server --host=192.168.1.10 --port=11000
-
-	`,
 	Run: startServer,
 }
 
-var (
-	portalHost string = "0.0.0.0"
-	portalPort string = "8002"
-)
+var settings struct {
+	insecure   bool
+	listenIp   string
+	listenPort string
+	authToken  string
+	certKey    string
+	certFile   string
+}
+
 
 func startServer(cmd *cobra.Command, args []string) {
-	endpoint := net.JoinHostPort(portalHost, portalPort)
+	endpoint := net.JoinHostPort(settings.listenIp, settings.listenPort)
 	l, err := net.Listen("tcp", endpoint)
 	if err != nil {
 		fmt.Println("failed listen", err)
 		os.Exit(-1)
 	}
 
-	settings := api.ServerSettings{
-		Insecure: true,
-		CertFile: "cert/server.crt",
-		KeyFile:  "cert/server.key",
-		Token:    "portalGun",
-	}
+	portalServer, err := api.NewPortalAPIServer(api.ServerSettings{
+		Insecure: settings.insecure,
+		CertFile: settings.certFile,
+		KeyFile:  settings.certKey,
+		Token:    settings.authToken,
+	})
 
-	portalServer, err := api.NewPortalAPIServer(settings)
 	if err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
@@ -70,8 +58,17 @@ func startServer(cmd *cobra.Command, args []string) {
 	<-errChan
 }
 
+func init() {
+	rootCmd.Flags().StringVarP(&settings.listenIp, "server", "s", "0.0.0.0", "listening ip for server")
+	rootCmd.Flags().StringVarP(&settings.listenPort, "port", "p", "8002", "listening port for server")
+	rootCmd.Flags().StringVarP(&settings.authToken, "auth-token", "t", "", "authorization token, leave empty for random")
+	// not implemented yet
+	rootCmd.Flags().BoolVarP(&settings.insecure, "insecure", "", true, "disable certification")
+}
+
 func main() {
 	fmt.Println("Starting vpn api server")
+	fmt.Printf("Listening on %s:%s\n", settings.listenIp, settings.listenPort)
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
 		os.Exit(-1)
