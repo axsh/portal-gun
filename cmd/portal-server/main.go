@@ -4,9 +4,10 @@ import (
 	"net"
 	"fmt"
 	"os"
+	"crypto/rand"
+	"encoding/base64"
 
 	"github.com/axsh/portal-gun/api"
-	// "github.com/spf13/pflag"
 	"github.com/spf13/cobra"
 )
 
@@ -26,6 +27,15 @@ var settings struct {
 	certFile   string
 }
 
+func randomizeToken(n int) (string, error) {
+	b := make([]byte, n)
+	_, err := rand.Read(b)
+	if err != nil {
+		return "", err
+	}
+
+	return base64.URLEncoding.EncodeToString(b), nil
+}
 
 func startServer(cmd *cobra.Command, args []string) {
 	endpoint := net.JoinHostPort(settings.listenIp, settings.listenPort)
@@ -33,6 +43,18 @@ func startServer(cmd *cobra.Command, args []string) {
 	if err != nil {
 		fmt.Println("failed listen", err)
 		os.Exit(-1)
+	}
+
+
+	if settings.authToken == "" {
+		token, err := randomizeToken(32)
+		if err != nil {
+			fmt.Println(err, "failed to generate random token, exiting...")
+			os.Exit(-1)
+		} else {
+			settings.authToken = token
+		}
+
 	}
 
 	portalServer, err := api.NewPortalAPIServer(api.ServerSettings{
