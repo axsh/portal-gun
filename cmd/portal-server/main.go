@@ -1,11 +1,11 @@
 package main
 
 import (
-	"net"
-	"fmt"
-	"os"
 	"crypto/rand"
 	"encoding/base64"
+	"fmt"
+	"net"
+	"os"
 
 	"github.com/axsh/portal-gun/api"
 	"github.com/spf13/cobra"
@@ -15,7 +15,7 @@ var rootCmd = &cobra.Command{
 	Use:   "portal-server",
 	Short: "Run the server process",
 	Long:  ``,
-	Run: startServer,
+	Run:   startServer,
 }
 
 var settings struct {
@@ -45,7 +45,6 @@ func startServer(cmd *cobra.Command, args []string) {
 		os.Exit(-1)
 	}
 
-
 	if settings.authToken == "" {
 		token, err := randomizeToken(32)
 		if err != nil {
@@ -72,7 +71,7 @@ func startServer(cmd *cobra.Command, args []string) {
 	go func() {
 		if err := portalServer.Serve(l); err != nil {
 			fmt.Println("server failed")
-			errChan <-err
+			errChan <- err
 			return
 		}
 	}()

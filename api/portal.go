@@ -40,14 +40,12 @@ func (p *PortalClient) addSecureOpts(opts *[]grpc.DialOption) error {
 	return nil
 }
 
-
-
 func (p *PortalClient) connect(ctx context.Context) error {
 	var err error
 
 	copts := []grpc.DialOption{
 		grpc.WithBlock(),
-		grpc.WithTimeout(time.Second*3),
+		grpc.WithTimeout(time.Second * 3),
 	}
 
 	if err = p.addSecureOpts(&copts); err != nil {
@@ -102,10 +100,10 @@ func NewPortalClient(ip string, port string, insecure bool, cert string, token s
 	}
 	// ctx, _ := context.WithTimeout(context.Background(), time.Second*3)
 	return &PortalClient{
-		hostIp: ip,
-		hostPort: port,
-		insecure: insecure,
-		certFile: cert,
+		hostIp:    ip,
+		hostPort:  port,
+		insecure:  insecure,
+		certFile:  cert,
 		authToken: token,
 	}, ctx
 }

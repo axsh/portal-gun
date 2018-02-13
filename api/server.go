@@ -6,9 +6,9 @@ import (
 
 	"github.com/pkg/errors"
 	"golang.org/x/net/context"
+	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials"
 	"google.golang.org/grpc/metadata"
-	"google.golang.org/grpc"
 )
 
 //go:generate protoc -I../proto --go_out=plugins=grpc:${GOPATH}/src ../proto/server.proto

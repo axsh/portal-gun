@@ -2,9 +2,9 @@ package vpn
 
 import (
 	"github.com/axsh/portal-gun/api"
-	"github.com/axsh/portal-gun/model"
 	"github.com/axsh/portal-gun/cmd/portal-client/cmd"
 	"github.com/axsh/portal-gun/cmd/portal-client/cmd/util"
+	"github.com/axsh/portal-gun/model"
 	"github.com/spf13/cobra"
 )
 

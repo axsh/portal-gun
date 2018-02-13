@@ -11,7 +11,7 @@ import (
 func TestNewPortalClient(t *testing.T) {
 	assert := assert.New(t)
 
-	p, ctx := NewPortalClient("0.0.0.0", "8002", true, "cert-file", "token",)
+	p, ctx := NewPortalClient("0.0.0.0", "8002", true, "cert-file", "token")
 
 	assert.NotNil(p)
 	assert.Equal("0.0.0.0", p.hostIp)
